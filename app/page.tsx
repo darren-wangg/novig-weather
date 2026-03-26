@@ -1,4 +1,4 @@
-export default function App() {
+export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="border-b bg-white px-4 py-3">
