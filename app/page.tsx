@@ -2,6 +2,7 @@
 
 import { ComparisonBanner } from "@/components/ComparisonBanner";
 import { EventConfig } from "@/components/EventConfig";
+import { ForecastSkeleton } from "@/components/ForecastSkeleton";
 import { HourlyChart } from "@/components/HourlyChart";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { WeatherCard } from "@/components/WeatherCard";
@@ -91,12 +92,14 @@ export default function Home() {
 
         <section className="mt-6">
           {(isLoading || geo.loading) && (
-            <div className="flex items-center justify-center py-12">
-              <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600 dark:border-gray-600 dark:border-t-blue-400" />
-              <span className="ml-3 text-sm text-gray-500 dark:text-gray-400">
-                {geo.loading ? "Detecting location..." : "Loading forecast..."}
-              </span>
-            </div>
+            geo.loading ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600 dark:border-gray-600 dark:border-t-blue-400" />
+                <span className="ml-3 text-sm text-gray-500 dark:text-gray-400">Detecting location...</span>
+              </div>
+            ) : (
+              <ForecastSkeleton />
+            )
           )}
 
           {error && (

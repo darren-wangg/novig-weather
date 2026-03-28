@@ -71,7 +71,7 @@ export function WeatherCard({ label, day }: WeatherCardProps) {
           <span className="text-xs font-medium text-gray-500 dark:text-gray-400">Outdoor Score</span>
           <span className="text-xs font-bold text-gray-700 dark:text-gray-300">{score.total}/100</span>
         </div>
-        <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
+        <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700" role="progressbar" aria-valuenow={score.total} aria-valuemin={0} aria-valuemax={100} aria-label={`Outdoor score: ${score.total} out of 100`}>
           <div
             className={`h-full rounded-full transition-all duration-500 ${scoreColor}`}
             style={{ width: `${score.total}%` }}
