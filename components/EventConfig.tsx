@@ -8,17 +8,16 @@ import { TimeRangeSelector } from "./TimeRangeSelector";
 interface EventConfigProps {
   config: EventConfigType;
   onChange: (config: EventConfigType) => void;
-  onSubmit: () => void;
+  onSubmit: (config?: EventConfigType) => void;
 }
 
 export function EventConfig({ config, onChange, onSubmit }: EventConfigProps) {
   const updateField = <K extends keyof EventConfigType>(key: K, value: EventConfigType[K]) => {
     const next = { ...config, [key]: value };
     onChange(next);
-    // Auto-submit when day or time range changes (if location is set)
+    // Auto-submit with the NEW config when day or time range changes
     if (key !== "location" && next.location.trim()) {
-      // Delay to allow state to settle
-      setTimeout(onSubmit, 0);
+      onSubmit(next);
     }
   };
 
@@ -27,7 +26,7 @@ export function EventConfig({ config, onChange, onSubmit }: EventConfigProps) {
       <LocationInput
         value={config.location}
         onChange={(v) => updateField("location", v)}
-        onSubmit={onSubmit}
+        onSubmit={() => onSubmit()}
       />
       <div className="flex flex-wrap gap-6">
         <DaySelector value={config.day} onChange={(v: DayValue) => updateField("day", v)} />

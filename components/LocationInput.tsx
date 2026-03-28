@@ -14,6 +14,12 @@ export function LocationInput({ value, onChange, onSubmit }: LocationInputProps)
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const [loaded, setLoaded] = useState(false);
 
+  // Keep stable refs to avoid re-initializing autocomplete
+  const onChangeRef = useRef(onChange);
+  const onSubmitRef = useRef(onSubmit);
+  onChangeRef.current = onChange;
+  onSubmitRef.current = onSubmit;
+
   // Load Google Places API
   useEffect(() => {
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY;
@@ -38,22 +44,19 @@ export function LocationInput({ value, onChange, onSubmit }: LocationInputProps)
       const place = autocomplete.getPlace();
       const address = place.formatted_address || place.name || "";
       if (address) {
-        onChange(address);
-        // Defer submit so React state settles
-        setTimeout(onSubmit, 0);
+        onChangeRef.current(address);
+        // Small delay so React state settles before submit reads it
+        setTimeout(() => onSubmitRef.current(), 0);
       }
     });
 
     autocompleteRef.current = autocomplete;
-  }, [loaded, onChange, onSubmit]);
+  }, [loaded]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      // Prevent form submission if autocomplete dropdown is open
-      // Google Places handles its own Enter key for selecting suggestions
-      if (value.trim() && !document.querySelector(".pac-container .pac-item-selected")) {
-        setTimeout(onSubmit, 150); // Small delay to let Places selection fire first
-      }
+    if (e.key === "Enter" && value.trim()) {
+      // Small delay to let Google Places selection fire first if dropdown is open
+      setTimeout(() => onSubmitRef.current(), 150);
     }
   };
 
