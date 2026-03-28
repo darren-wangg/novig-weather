@@ -1,9 +1,9 @@
 "use client";
 
+import { DAYS, TIME_RANGES } from "@/lib/constants";
 import type { DayValue, EventConfig as EventConfigType, TimeRangeValue } from "@/lib/constants";
-import { DaySelector } from "./DaySelector";
+import { ChipSelector } from "./ChipSelector";
 import { LocationInput } from "./LocationInput";
-import { TimeRangeSelector } from "./TimeRangeSelector";
 
 interface EventConfigProps {
   config: EventConfigType;
@@ -15,7 +15,6 @@ export function EventConfig({ config, onChange, onSubmit }: EventConfigProps) {
   const updateField = <K extends keyof EventConfigType>(key: K, value: EventConfigType[K]) => {
     const next = { ...config, [key]: value };
     onChange(next);
-    // Auto-submit with the NEW config when day or time range changes
     if (key !== "location" && next.location.trim()) {
       onSubmit(next);
     }
@@ -35,8 +34,10 @@ export function EventConfig({ config, onChange, onSubmit }: EventConfigProps) {
         }}
       />
       <div className="flex flex-wrap gap-6">
-        <DaySelector value={config.day} onChange={(v: DayValue) => updateField("day", v)} />
-        <TimeRangeSelector
+        <ChipSelector label="Day" options={DAYS} value={config.day} onChange={(v: DayValue) => updateField("day", v)} />
+        <ChipSelector
+          label="Time"
+          options={TIME_RANGES}
           value={config.timeRange}
           onChange={(v: TimeRangeValue) => updateField("timeRange", v)}
         />

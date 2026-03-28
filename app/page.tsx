@@ -13,7 +13,17 @@ import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useTheme } from "@/hooks/useTheme";
 import { getDefaultConfig } from "@/lib/constants";
 import type { EventConfig as EventConfigType } from "@/lib/constants";
+import type { DayConditions } from "@/lib/schemas";
 import { useCallback, useEffect, useRef, useState } from "react";
+
+function ForecastPanel({ label, day, color, isDark }: { label: string; day: DayConditions; color: string; isDark: boolean }) {
+  return (
+    <div className="space-y-4">
+      <WeatherCard label={label} day={day} />
+      <HourlyChart hours={day.hours} label={label} color={color} isDark={isDark} />
+    </div>
+  );
+}
 
 export default function Home() {
   const [config, setConfig] = useLocalStorage<EventConfigType>("event-config", getDefaultConfig());
@@ -124,30 +134,14 @@ export default function Home() {
               {data.thisWeek && data.nextWeek ? (
                 <WeekCarousel labels={["This week", "Next week"]}>
                   {[
-                    <div key="this" className="space-y-4">
-                      <WeatherCard label="This week" day={data.thisWeek} />
-                      <HourlyChart hours={data.thisWeek.hours} label="This week" color="#10b981" isDark={theme === "dark"} />
-                    </div>,
-                    <div key="next" className="space-y-4">
-                      <WeatherCard label="Next week" day={data.nextWeek} />
-                      <HourlyChart hours={data.nextWeek.hours} label="Next week" color="#6366f1" isDark={theme === "dark"} />
-                    </div>,
+                    <ForecastPanel key="this" label="This week" day={data.thisWeek} color="#10b981" isDark={theme === "dark"} />,
+                    <ForecastPanel key="next" label="Next week" day={data.nextWeek} color="#6366f1" isDark={theme === "dark"} />,
                   ]}
                 </WeekCarousel>
               ) : (
                 <div className="grid gap-6 md:grid-cols-2">
-                  {data.thisWeek && (
-                    <div className="space-y-4">
-                      <WeatherCard label="This week" day={data.thisWeek} />
-                      <HourlyChart hours={data.thisWeek.hours} label="This week" color="#10b981" isDark={theme === "dark"} />
-                    </div>
-                  )}
-                  {data.nextWeek && (
-                    <div className="space-y-4">
-                      <WeatherCard label="Next week" day={data.nextWeek} />
-                      <HourlyChart hours={data.nextWeek.hours} label="Next week" color="#6366f1" isDark={theme === "dark"} />
-                    </div>
-                  )}
+                  {data.thisWeek && <ForecastPanel label="This week" day={data.thisWeek} color="#10b981" isDark={theme === "dark"} />}
+                  {data.nextWeek && <ForecastPanel label="Next week" day={data.nextWeek} color="#6366f1" isDark={theme === "dark"} />}
                 </div>
               )}
             </div>

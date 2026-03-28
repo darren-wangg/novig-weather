@@ -23,10 +23,11 @@ export interface EventConfig {
   timeRange: TimeRangeValue;
 }
 
-const DAY_VALUES: DayValue[] = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+// Ordered by JS getDay() index (0=Sun) for lookup
+const DAY_BY_INDEX: DayValue[] = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
 
 function getCurrentDay(): DayValue {
-  return DAY_VALUES[new Date().getDay()]!;
+  return DAY_BY_INDEX[new Date().getDay()]!;
 }
 
 function getCurrentTimeRange(): TimeRangeValue {
