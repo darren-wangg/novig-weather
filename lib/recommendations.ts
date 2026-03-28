@@ -132,7 +132,7 @@ export function compareWeeks(
   const nextScore = scoreWeather(nextWeek);
   const diff = thisScore.total - nextScore.total;
 
-  if (diff > 15) return "This week looks better — go for it!";
-  if (diff < -15) return "Next week looks more favorable";
-  return "Both weeks look similar";
+  if (diff > 0) return "This week looks better — go for it!";
+  if (diff < 0) return "Next week looks more favorable";
+  return "Both weeks are tied";
 }

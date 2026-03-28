@@ -20,7 +20,7 @@ function ForecastPanel({ label, day, color, isDark }: { label: string; day: DayC
   return (
     <div className="space-y-4">
       <WeatherCard label={label} day={day} />
-      <HourlyChart hours={day.hours} label={label} color={color} isDark={isDark} />
+      <HourlyChart hours={day.hours} color={color} isDark={isDark} />
     </div>
   );
 }

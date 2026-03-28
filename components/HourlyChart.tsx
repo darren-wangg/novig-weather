@@ -15,7 +15,6 @@ import {
 
 interface HourlyChartProps {
   hours: HourlyConditions[];
-  label: string;
   color: string;
   isDark?: boolean;
 }
@@ -35,7 +34,7 @@ function formatHour(datetime: string): string {
   return hour > 12 ? `${hour - 12} PM` : `${hour} AM`;
 }
 
-export function HourlyChart({ hours, label, color, isDark = false }: HourlyChartProps) {
+export function HourlyChart({ hours, color, isDark = false }: HourlyChartProps) {
   if (hours.length === 0) {
     return (
       <div className="flex h-64 items-center justify-center rounded-xl border bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
@@ -54,7 +53,7 @@ export function HourlyChart({ hours, label, color, isDark = false }: HourlyChart
 
   return (
     <div className="rounded-xl border bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-      <h4 className="mb-3 text-sm font-semibold text-gray-600 dark:text-gray-300">{label} — Hourly Breakdown</h4>
+      <h4 className="mb-3 text-sm font-semibold text-gray-600 dark:text-gray-300">Hourly Breakdown</h4>
       <ResponsiveContainer width="100%" height={240}>
         <ComposedChart data={data} margin={{ top: 5, right: 5, bottom: 5, left: -10 }}>
           <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "#374151" : "#f0f0f0"} />

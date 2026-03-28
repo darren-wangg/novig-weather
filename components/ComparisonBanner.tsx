@@ -24,10 +24,10 @@ export function ComparisonBanner({ thisWeek, nextWeek }: ComparisonBannerProps) 
       </div>
       <div className="mt-2 flex gap-4 text-xs text-indigo-700 dark:text-indigo-300">
         <span className={betterWeek === "this" ? "font-bold" : ""}>
-          This week: {thisScore.total}/100
+          This week: {thisScore.total}
         </span>
         <span className={betterWeek === "next" ? "font-bold" : ""}>
-          Next week: {nextScore.total}/100
+          Next week: {nextScore.total}
         </span>
       </div>
     </div>

@@ -36,8 +36,8 @@ export function WeekCarousel({ children, labels }: WeekCarouselProps) {
 
   return (
     <div>
-      {/* Navigation header */}
-      <div className="mb-3 flex items-center justify-between">
+      {/* Navigation header (mobile only — both panels visible on desktop) */}
+      <div className="mb-3 flex items-center justify-between md:hidden">
         <div className="flex gap-2">
           {labels.map((label, i) => (
             <button

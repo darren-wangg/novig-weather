@@ -21,7 +21,7 @@ export function ThemeToggle({ theme, onToggle }: ThemeToggleProps) {
     >
       {/* Sliding knob with active icon inside */}
       <span
-        className={`flex h-6 w-6 items-center justify-center rounded-full bg-white shadow-sm transition-transform duration-200 ${isDark ? "translate-x-5.5" : "translate-x-0.5"}`}
+        className={`flex h-6 w-6 items-center justify-center rounded-full bg-white shadow-sm transition-transform duration-200 ${isDark ? "translate-x-0.5" : "translate-x-5.5"}`}
       >
         {isDark ? (
           <svg
