@@ -5,7 +5,16 @@ import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "Tempora",
-  description: "Compare weekly forecasts for your outdoor meetup",
+  description: "Compare weekly forecasts for your outdoor meetup — pick a day, see this week vs next week side-by-side with scoring and hourly charts.",
+  icons: {
+    icon: "/icon.png",
+    apple: "/icon.png",
+  },
+  openGraph: {
+    title: "Tempora",
+    description: "Compare weekly forecasts for your outdoor meetup",
+    type: "website",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
