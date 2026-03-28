@@ -26,7 +26,13 @@ export function EventConfig({ config, onChange, onSubmit }: EventConfigProps) {
       <LocationInput
         value={config.location}
         onChange={(v) => updateField("location", v)}
-        onSubmit={() => onSubmit()}
+        onSubmit={(address) => {
+          if (address) {
+            onSubmit({ ...config, location: address });
+          } else {
+            onSubmit();
+          }
+        }}
       />
       <div className="flex flex-wrap gap-6">
         <DaySelector value={config.day} onChange={(v: DayValue) => updateField("day", v)} />

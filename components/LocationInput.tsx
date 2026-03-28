@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 interface LocationInputProps {
   value: string;
   onChange: (value: string) => void;
-  onSubmit: () => void;
+  onSubmit: (address?: string) => void;
 }
 
 export function LocationInput({ value, onChange, onSubmit }: LocationInputProps) {
@@ -19,6 +19,9 @@ export function LocationInput({ value, onChange, onSubmit }: LocationInputProps)
   const onSubmitRef = useRef(onSubmit);
   onChangeRef.current = onChange;
   onSubmitRef.current = onSubmit;
+
+  // Pending Enter submit — cancelled if place_changed fires first
+  const pendingEnterSubmit = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Load Google Places API
   useEffect(() => {
@@ -41,12 +44,16 @@ export function LocationInput({ value, onChange, onSubmit }: LocationInputProps)
     });
 
     autocomplete.addListener("place_changed", () => {
+      // Cancel any pending Enter submit — Places is handling the selection
+      if (pendingEnterSubmit.current) {
+        clearTimeout(pendingEnterSubmit.current);
+        pendingEnterSubmit.current = null;
+      }
       const place = autocomplete.getPlace();
       const address = place.formatted_address || place.name || "";
       if (address) {
         onChangeRef.current(address);
-        // Small delay so React state settles before submit reads it
-        setTimeout(() => onSubmitRef.current(), 0);
+        onSubmitRef.current(address);
       }
     });
 
@@ -55,8 +62,14 @@ export function LocationInput({ value, onChange, onSubmit }: LocationInputProps)
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && value.trim()) {
-      // Small delay to let Google Places selection fire first if dropdown is open
-      setTimeout(() => onSubmitRef.current(), 150);
+      // Delay briefly so place_changed can cancel if the user selected from the dropdown.
+      // Value is captured now (no stale closure) — the delay is only for event ordering.
+      const captured = value;
+      if (pendingEnterSubmit.current) clearTimeout(pendingEnterSubmit.current);
+      pendingEnterSubmit.current = setTimeout(() => {
+        pendingEnterSubmit.current = null;
+        onSubmitRef.current(captured);
+      }, 50);
     }
   };
 
