@@ -1,0 +1,45 @@
+export const DAYS = [
+  { value: "mon", label: "Mon" },
+  { value: "tue", label: "Tue" },
+  { value: "wed", label: "Wed" },
+  { value: "thu", label: "Thu" },
+  { value: "fri", label: "Fri" },
+  { value: "sat", label: "Sat" },
+  { value: "sun", label: "Sun" },
+] as const;
+
+export const TIME_RANGES = [
+  { value: "morning", label: "Morning", description: "6 AM – 12 PM" },
+  { value: "afternoon", label: "Afternoon", description: "12 PM – 6 PM" },
+  { value: "evening", label: "Evening", description: "6 PM – 10 PM" },
+] as const;
+
+export type DayValue = (typeof DAYS)[number]["value"];
+export type TimeRangeValue = (typeof TIME_RANGES)[number]["value"];
+
+export interface EventConfig {
+  location: string;
+  day: DayValue;
+  timeRange: TimeRangeValue;
+}
+
+const DAY_VALUES: DayValue[] = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+
+function getCurrentDay(): DayValue {
+  return DAY_VALUES[new Date().getDay()]!;
+}
+
+function getCurrentTimeRange(): TimeRangeValue {
+  const hour = new Date().getHours();
+  if (hour < 12) return "morning";
+  if (hour < 18) return "afternoon";
+  return "evening";
+}
+
+export function getDefaultConfig(): EventConfig {
+  return {
+    location: "",
+    day: getCurrentDay(),
+    timeRange: getCurrentTimeRange(),
+  };
+}
