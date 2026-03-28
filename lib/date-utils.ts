@@ -55,13 +55,13 @@ export function findDayByWeekday<T extends { datetime: string }>(
 export function getTimeRange(window: string): TimeRange {
   switch (window.toLowerCase()) {
     case "morning":
-      return { start: 6, end: 12 };
+      return { start: 8, end: 12 };
     case "afternoon":
-      return { start: 12, end: 18 };
+      return { start: 12, end: 17 };
     case "evening":
-      return { start: 18, end: 22 };
+      return { start: 17, end: 21 };
     default:
-      return { start: 6, end: 22 };
+      return { start: 8, end: 21 };
   }
 }
 

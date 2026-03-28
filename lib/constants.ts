@@ -9,9 +9,9 @@ export const DAYS = [
 ] as const;
 
 export const TIME_RANGES = [
-  { value: "morning", label: "Morning", description: "6 AM – 12 PM" },
-  { value: "afternoon", label: "Afternoon", description: "12 PM – 6 PM" },
-  { value: "evening", label: "Evening", description: "6 PM – 10 PM" },
+  { value: "morning", label: "Morning", description: "8 AM – 12 PM" },
+  { value: "afternoon", label: "Afternoon", description: "12 PM – 5 PM" },
+  { value: "evening", label: "Evening", description: "5 PM – 9 PM" },
 ] as const;
 
 export type DayValue = (typeof DAYS)[number]["value"];
@@ -33,7 +33,7 @@ function getCurrentDay(): DayValue {
 function getCurrentTimeRange(): TimeRangeValue {
   const hour = new Date().getHours();
   if (hour < 12) return "morning";
-  if (hour < 18) return "afternoon";
+  if (hour < 17) return "afternoon";
   return "evening";
 }
 

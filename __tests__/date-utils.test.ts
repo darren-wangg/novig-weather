@@ -15,18 +15,18 @@ describe("getDateRange", () => {
 
 describe("getTimeRange", () => {
   it("maps morning/afternoon/evening to correct hours", () => {
-    expect(getTimeRange("morning")).toEqual({ start: 6, end: 12 });
-    expect(getTimeRange("afternoon")).toEqual({ start: 12, end: 18 });
-    expect(getTimeRange("evening")).toEqual({ start: 18, end: 22 });
+    expect(getTimeRange("morning")).toEqual({ start: 8, end: 12 });
+    expect(getTimeRange("afternoon")).toEqual({ start: 12, end: 17 });
+    expect(getTimeRange("evening")).toEqual({ start: 17, end: 21 });
   });
 });
 
 describe("filterHoursByRange", () => {
-  const hours = [{ datetime: "06:00:00" }, { datetime: "12:00:00" }, { datetime: "18:00:00" }];
+  const hours = [{ datetime: "08:00:00" }, { datetime: "12:00:00" }, { datetime: "17:00:00" }];
 
   it("filters hours to the given range", () => {
-    expect(filterHoursByRange(hours, { start: 6, end: 12 })).toHaveLength(1);
-    expect(filterHoursByRange(hours, { start: 12, end: 18 })).toHaveLength(1);
-    expect(filterHoursByRange(hours, { start: 6, end: 22 })).toHaveLength(3);
+    expect(filterHoursByRange(hours, { start: 8, end: 12 })).toHaveLength(1);
+    expect(filterHoursByRange(hours, { start: 12, end: 17 })).toHaveLength(1);
+    expect(filterHoursByRange(hours, { start: 8, end: 21 })).toHaveLength(3);
   });
 });

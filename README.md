@@ -1,32 +1,32 @@
 # Tempora
 
-A weather comparison app for outdoor meetup organizers. Pick a day and time window, and Tempora shows this week's forecast side-by-side with next week's — with scoring, recommendations, and hourly charts to help you decide when to meet.
+A weather comparison app for outdoor meetup organizers. Pick a day and time window, and see this week's forecast side-by-side with next week's. Includes scoring, recommendations, and hourly charts to help you decide when to meet.
 
 ![Tempora Screenshot](public/screenshot.png)
 
 ## Features
 
-- **Week-over-week comparison** — see this week vs next week at a glance
-- **Smart recommendations** — weighted scoring (0–100) across temperature, wind, precipitation, and humidity
-- **Hourly charts** — temperature and precipitation overlaid for your selected time window
-- **Google Places autocomplete** — search any park, city, or address
-- **Auto-detect location** — uses browser geolocation on first visit
-- **Day & time selectors** — Morning / Afternoon / Evening for any day of the week
-- **Dark mode** — toggle with system preference detection
-- **Persistent preferences** — location, day, time, and theme saved to localStorage
+- **Week-over-week comparison**: see this week vs next week at a glance
+- **Smart recommendations**: weighted scoring (0–100) across temperature, wind, precipitation, and humidity
+- **Hourly charts**: temperature and precipitation for your selected time window
+- **Google Places autocomplete**: search any park, city, or address
+- **Auto-detect location**: uses browser geolocation on first visit
+- **Day & time selectors**: Morning / Afternoon / Evening for any day of the week
+- **Dark mode**: toggle with system preferences
+- **Persistent preferences**: location, day, time, and theme saved to localStorage
 
 ## Tech Stack
 
 | Layer | Choice |
 |-------|--------|
-| Framework | Next.js 16 (App Router) — server-side API proxy keeps keys off the client |
+| Framework | Next.js 16 (App Router) |
 | UI | React 19 + TypeScript 5.7 (strict) |
 | Styling | Tailwind CSS v4 |
 | Data fetching | TanStack React Query v5 |
 | Charts | Recharts (ComposedChart — temperature area + precipitation bars) |
 | Mobile navigation | Embla Carousel v8 |
 | Validation | Zod v4 — runtime API response validation + type inference |
-| Location | Google Places Autocomplete (`@googlemaps/js-api-loader` v2) |
+| Location | Google Places Autocomplete (`@googlemaps/js-api-loader`) |
 | Linting | Biome 2.4 |
 | Testing | Vitest 4 (unit) + Playwright (e2e) |
 | Weather data | Visual Crossing API |
@@ -68,46 +68,55 @@ bun run format   # Biome format
 
 ## Architecture
 
-```
-app/
-  page.tsx              Main page — orchestrates state, geolocation, forecast
-  layout.tsx            Root layout with metadata, ErrorBoundary, Providers
-  providers.tsx         QueryClientProvider (5min stale time)
-  globals.css           Tailwind v4 import + dark mode variant
-  api/forecast/
-    route.ts            Server-side proxy to Visual Crossing (Zod-validated)
+### `app/` — Next.js App Router
 
-components/
-  EventConfig.tsx       Composes LocationInput + ChipSelector (day) + ChipSelector (time)
-  LocationInput.tsx     Google Places Autocomplete with ref-based init
-  ChipSelector.tsx      Generic chip button group (used for day & time selection)
-  WeatherCard.tsx       Weather card with gradient, score bar, stats, tooltip
-  HourlyChart.tsx       Recharts ComposedChart (temp area + precip bars)
-  ComparisonBanner.tsx  Banner comparing week scores with recommendation
-  WeekCarousel.tsx      Embla carousel for mobile week navigation
-  ThemeToggle.tsx       Sliding light/dark mode toggle
-  ForecastSkeleton.tsx  Pulsing loading skeleton
-  ErrorBoundary.tsx     Error boundary with retry
+| File | Purpose |
+|------|---------|
+| `page.tsx` | Main page — orchestrates state, geolocation, forecast |
+| `layout.tsx` | Root layout with metadata, ErrorBoundary, Providers |
+| `providers.tsx` | QueryClientProvider (5min stale time) |
+| `globals.css` | Tailwind v4 import + dark mode variant |
+| `api/forecast/route.ts` | Server-side proxy to Visual Crossing (Zod-validated) |
 
-hooks/
-  useForecast.ts        React Query wrapper for /api/forecast
-  useGeolocation.ts     Browser geolocation + reverse geocode
-  useLocalStorage.ts    Generic localStorage with SSR-safe hydration
-  useTheme.ts           Dark mode state + localStorage persistence
+### `components/` — UI
 
-lib/
-  constants.ts          Day/time presets, EventConfig type, getDefaultConfig()
-  date-utils.ts         Date range calculation, weekday mapping, hour filtering
-  schemas.ts            Zod v4 schemas (single source of truth for types)
-  weather.ts            Server-side fetch + Zod validation
-  recommendations.ts    scoreWeather (0–100), getWeatherMessage, compareWeeks
-  weather-styles.ts     Verdict → Tailwind gradient/border/score classes
-```
+| File | Purpose |
+|------|---------|
+| `EventConfig.tsx` | Composes LocationInput + ChipSelector (day) + ChipSelector (time) |
+| `LocationInput.tsx` | Google Places Autocomplete with ref-based init |
+| `ChipSelector.tsx` | Generic chip button group (day & time selection) |
+| `WeatherCard.tsx` | Weather card with gradient, score bar, stats, tooltip |
+| `HourlyChart.tsx` | Recharts ComposedChart (temp area + precip bars) |
+| `ComparisonBanner.tsx` | Banner comparing week scores with recommendation |
+| `WeekCarousel.tsx` | Embla carousel for mobile week navigation |
+| `ThemeToggle.tsx` | Sliding light/dark mode toggle |
+| `ForecastSkeleton.tsx` | Pulsing loading skeleton |
+| `ErrorBoundary.tsx` | Error boundary with retry |
+
+### `hooks/` — Custom Hooks
+
+| File | Purpose |
+|------|---------|
+| `useForecast.ts` | React Query wrapper for /api/forecast |
+| `useGeolocation.ts` | Browser geolocation + reverse geocode |
+| `useLocalStorage.ts` | Generic localStorage with SSR-safe hydration |
+| `useTheme.ts` | Dark mode state + localStorage persistence |
+
+### `lib/` — Business Logic
+
+| File | Purpose |
+|------|---------|
+| `constants.ts` | Day/time presets, EventConfig type, getDefaultConfig() |
+| `date-utils.ts` | Date range calculation, weekday mapping, hour filtering |
+| `schemas.ts` | Zod v4 schemas (single source of truth for types) |
+| `weather.ts` | Server-side fetch + Zod validation |
+| `recommendations.ts` | scoreWeather (0–100), getWeatherMessage, compareWeeks |
+| `weather-styles.ts` | Verdict-based Tailwind gradient/border/score classes |
 
 ### Key Decisions
 
-- **Next.js over Vite** — needed server-side API routes to keep the Visual Crossing key off the client
-- **Zod schemas as single source of truth** — runtime validation + TypeScript types inferred from the same schemas
-- **Scoring engine** — weighted formula across temperature, wind, precipitation, and humidity (0–100 scale)
-- **Ref-based callbacks in LocationInput** — avoids re-initializing Google Places autocomplete on every render
-- **Cancellable pending submit** — handles Enter key vs Places dropdown race condition
+- **Next.js over Vite**: needed server-side API routes to keep the Visual Crossing key off the client
+- **Zod schemas**: runtime validation + TypeScript types inferred from the same schemas
+- **Scoring engine**: weighted formula across temperature, wind, precipitation, and humidity (0–100 scale)
+- **Ref-based callbacks in LocationInput**: avoids re-initializing Google Places autocomplete on every render
+- **Cancellable pending submit**: handles Enter key vs Places dropdown race condition
