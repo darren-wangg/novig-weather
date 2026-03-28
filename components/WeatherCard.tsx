@@ -34,8 +34,8 @@ export function WeatherCard({ label, day }: WeatherCardProps) {
       {/* Header */}
       <div className="mb-3 flex items-start justify-between">
         <div>
-          <p className="text-xs font-semibold tracking-wide text-gray-500 uppercase">{label}</p>
-          <p className="mt-0.5 text-lg font-bold text-gray-900">{formattedDate}</p>
+          <p className="text-xs font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">{label}</p>
+          <p className="mt-0.5 text-lg font-bold text-gray-900 dark:text-white">{formattedDate}</p>
         </div>
         <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${badgeClasses}`}>
           {score.label}
@@ -48,15 +48,15 @@ export function WeatherCard({ label, day }: WeatherCardProps) {
           {icon}
         </span>
         <div>
-          <p className="text-3xl font-bold text-gray-900">{Math.round(day.temp)}°F</p>
-          <p className="text-sm text-gray-600">
+          <p className="text-3xl font-bold text-gray-900 dark:text-white">{Math.round(day.temp)}°F</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
             {Math.round(day.tempmin)}° / {Math.round(day.tempmax)}°
           </p>
         </div>
       </div>
 
       {/* Message */}
-      <p className="mb-4 text-sm font-medium text-gray-700">{score.message}</p>
+      <p className="mb-4 text-sm font-medium text-gray-700 dark:text-gray-300">{score.message}</p>
 
       {/* Stats grid */}
       <div className="mb-4 grid grid-cols-3 gap-3">
@@ -68,10 +68,10 @@ export function WeatherCard({ label, day }: WeatherCardProps) {
       {/* Score bar */}
       <div>
         <div className="mb-1 flex items-center justify-between">
-          <span className="text-xs font-medium text-gray-500">Outdoor Score</span>
-          <span className="text-xs font-bold text-gray-700">{score.total}/100</span>
+          <span className="text-xs font-medium text-gray-500 dark:text-gray-400">Outdoor Score</span>
+          <span className="text-xs font-bold text-gray-700 dark:text-gray-300">{score.total}/100</span>
         </div>
-        <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
+        <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
           <div
             className={`h-full rounded-full transition-all duration-500 ${scoreColor}`}
             style={{ width: `${score.total}%` }}
@@ -84,10 +84,10 @@ export function WeatherCard({ label, day }: WeatherCardProps) {
 
 function Stat({ icon, label, value }: { icon: string; label: string; value: string }) {
   return (
-    <div className="rounded-lg bg-white/60 px-2.5 py-2 text-center">
+    <div className="rounded-lg bg-white/60 px-2.5 py-2 text-center dark:bg-white/10">
       <span className="text-sm">{icon}</span>
-      <p className="mt-0.5 text-xs text-gray-500">{label}</p>
-      <p className="text-sm font-semibold text-gray-800">{value}</p>
+      <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">{label}</p>
+      <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">{value}</p>
     </div>
   );
 }

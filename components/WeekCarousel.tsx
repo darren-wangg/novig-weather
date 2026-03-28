@@ -46,8 +46,8 @@ export function WeekCarousel({ children, labels }: WeekCarouselProps) {
               onClick={() => emblaApi?.scrollTo(i)}
               className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                 selectedIndex === i
-                  ? "bg-gray-900 text-white"
-                  : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                  ? "bg-gray-900 text-white dark:bg-white dark:text-gray-900"
+                  : "bg-gray-100 text-gray-500 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600"
               }`}
             >
               {label}
@@ -59,7 +59,7 @@ export function WeekCarousel({ children, labels }: WeekCarouselProps) {
             type="button"
             onClick={scrollPrev}
             disabled={!canScrollPrev}
-            className="rounded-full p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 disabled:opacity-30"
+            className="rounded-full p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 disabled:opacity-30 dark:hover:bg-gray-700 dark:hover:text-gray-300"
             aria-label="Previous week"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
@@ -70,7 +70,7 @@ export function WeekCarousel({ children, labels }: WeekCarouselProps) {
             type="button"
             onClick={scrollNext}
             disabled={!canScrollNext}
-            className="rounded-full p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 disabled:opacity-30"
+            className="rounded-full p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 disabled:opacity-30 dark:hover:bg-gray-700 dark:hover:text-gray-300"
             aria-label="Next week"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
@@ -99,7 +99,7 @@ export function WeekCarousel({ children, labels }: WeekCarouselProps) {
             type="button"
             onClick={() => emblaApi?.scrollTo(i)}
             className={`h-1.5 rounded-full transition-all ${
-              selectedIndex === i ? "w-6 bg-gray-900" : "w-1.5 bg-gray-300"
+              selectedIndex === i ? "w-6 bg-gray-900 dark:bg-white" : "w-1.5 bg-gray-300 dark:bg-gray-600"
             }`}
             aria-label={`Go to ${label}`}
           />

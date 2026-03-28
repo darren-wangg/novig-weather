@@ -1,6 +1,7 @@
 "use client";
 
 import type { HourlyConditions } from "@/lib/schemas";
+import { useThemeMode } from "@/hooks/useTheme";
 import {
   Area,
   Bar,
@@ -37,11 +38,13 @@ function formatHour(datetime: string): string {
 export function HourlyChart({ hours, label, color }: HourlyChartProps) {
   if (hours.length === 0) {
     return (
-      <div className="flex h-64 items-center justify-center rounded-xl border bg-white p-4">
-        <p className="text-sm text-gray-400">No hourly data available</p>
+      <div className="flex h-64 items-center justify-center rounded-xl border bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
+        <p className="text-sm text-gray-400 dark:text-gray-500">No hourly data available</p>
       </div>
     );
   }
+
+  const isDark = useThemeMode() === "dark";
 
   const data: ChartDataPoint[] = hours.map((h) => ({
     time: formatHour(h.datetime),
@@ -52,16 +55,16 @@ export function HourlyChart({ hours, label, color }: HourlyChartProps) {
   }));
 
   return (
-    <div className="rounded-xl border bg-white p-4 shadow-sm">
-      <h4 className="mb-3 text-sm font-semibold text-gray-600">{label} — Hourly Breakdown</h4>
+    <div className="rounded-xl border bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+      <h4 className="mb-3 text-sm font-semibold text-gray-600 dark:text-gray-300">{label} — Hourly Breakdown</h4>
       <ResponsiveContainer width="100%" height={240}>
         <ComposedChart data={data} margin={{ top: 5, right: 5, bottom: 5, left: -10 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-          <XAxis dataKey="time" tick={{ fontSize: 11 }} tickLine={false} />
+          <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "#374151" : "#f0f0f0"} />
+          <XAxis dataKey="time" tick={{ fontSize: 11, fill: isDark ? "#9ca3af" : "#6b7280" }} tickLine={false} />
           <YAxis
             yAxisId="temp"
             orientation="left"
-            tick={{ fontSize: 11 }}
+            tick={{ fontSize: 11, fill: isDark ? "#9ca3af" : "#6b7280" }}
             tickLine={false}
             domain={["auto", "auto"]}
             unit="°"
@@ -71,8 +74,10 @@ export function HourlyChart({ hours, label, color }: HourlyChartProps) {
             contentStyle={{
               fontSize: 12,
               borderRadius: 8,
-              border: "1px solid #e5e7eb",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+              border: isDark ? "1px solid #374151" : "1px solid #e5e7eb",
+              boxShadow: isDark ? "0 2px 8px rgba(0,0,0,0.3)" : "0 2px 8px rgba(0,0,0,0.08)",
+              backgroundColor: isDark ? "#1f2937" : "#ffffff",
+              color: isDark ? "#e5e7eb" : "#111827",
             }}
             formatter={(value: number, name: string) => {
               if (name === "Temperature") return [`${value}°F`, name];
@@ -81,7 +86,7 @@ export function HourlyChart({ hours, label, color }: HourlyChartProps) {
               return [value, name];
             }}
           />
-          <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
+          <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8, color: isDark ? "#9ca3af" : "#6b7280" }} />
           <Area
             yAxisId="temp"
             type="monotone"

@@ -62,7 +62,7 @@ export function LocationInput({ value, onChange, onSubmit }: LocationInputProps)
 
   return (
     <div>
-      <label htmlFor="location-input" className="mb-1 block text-sm font-medium text-gray-700">
+      <label htmlFor="location-input" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
         Location
       </label>
       <div className="relative">
@@ -93,7 +93,7 @@ export function LocationInput({ value, onChange, onSubmit }: LocationInputProps)
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Search for a park, city, or address..."
-          className="w-full rounded-lg border border-gray-300 py-2 pr-3 pl-9 text-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+          className="w-full rounded-lg border border-gray-300 bg-white py-2 pr-3 pl-9 text-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
           autoComplete="off"
         />
       </div>
