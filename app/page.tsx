@@ -123,11 +123,11 @@ export default function Home() {
                   {[
                     <div key="this" className="space-y-4">
                       <WeatherCard label="This week" day={data.thisWeek} />
-                      <HourlyChart hours={data.thisWeek.hours} label="This week" color="#10b981" />
+                      <HourlyChart hours={data.thisWeek.hours} label="This week" color="#10b981" isDark={theme === "dark"} />
                     </div>,
                     <div key="next" className="space-y-4">
                       <WeatherCard label="Next week" day={data.nextWeek} />
-                      <HourlyChart hours={data.nextWeek.hours} label="Next week" color="#6366f1" />
+                      <HourlyChart hours={data.nextWeek.hours} label="Next week" color="#6366f1" isDark={theme === "dark"} />
                     </div>,
                   ]}
                 </WeekCarousel>
@@ -136,13 +136,13 @@ export default function Home() {
                   {data.thisWeek && (
                     <div className="space-y-4">
                       <WeatherCard label="This week" day={data.thisWeek} />
-                      <HourlyChart hours={data.thisWeek.hours} label="This week" color="#10b981" />
+                      <HourlyChart hours={data.thisWeek.hours} label="This week" color="#10b981" isDark={theme === "dark"} />
                     </div>
                   )}
                   {data.nextWeek && (
                     <div className="space-y-4">
                       <WeatherCard label="Next week" day={data.nextWeek} />
-                      <HourlyChart hours={data.nextWeek.hours} label="Next week" color="#6366f1" />
+                      <HourlyChart hours={data.nextWeek.hours} label="Next week" color="#6366f1" isDark={theme === "dark"} />
                     </div>
                   )}
                 </div>

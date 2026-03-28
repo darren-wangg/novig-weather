@@ -30,21 +30,3 @@ export function useTheme(): [Theme, () => void] {
 
   return [theme, toggle];
 }
-
-/** Lightweight hook to read the current theme mode (for non-Tailwind styling like Recharts) */
-export function useThemeMode(): Theme {
-  const [mode, setMode] = useState<Theme>("light");
-
-  useEffect(() => {
-    const isDark = document.documentElement.classList.contains("dark");
-    setMode(isDark ? "dark" : "light");
-
-    const observer = new MutationObserver(() => {
-      setMode(document.documentElement.classList.contains("dark") ? "dark" : "light");
-    });
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
-    return () => observer.disconnect();
-  }, []);
-
-  return mode;
-}

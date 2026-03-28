@@ -1,7 +1,6 @@
 "use client";
 
 import type { HourlyConditions } from "@/lib/schemas";
-import { useThemeMode } from "@/hooks/useTheme";
 import {
   Area,
   Bar,
@@ -18,6 +17,7 @@ interface HourlyChartProps {
   hours: HourlyConditions[];
   label: string;
   color: string;
+  isDark?: boolean;
 }
 
 interface ChartDataPoint {
@@ -35,7 +35,7 @@ function formatHour(datetime: string): string {
   return hour > 12 ? `${hour - 12} PM` : `${hour} AM`;
 }
 
-export function HourlyChart({ hours, label, color }: HourlyChartProps) {
+export function HourlyChart({ hours, label, color, isDark = false }: HourlyChartProps) {
   if (hours.length === 0) {
     return (
       <div className="flex h-64 items-center justify-center rounded-xl border bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
@@ -43,8 +43,6 @@ export function HourlyChart({ hours, label, color }: HourlyChartProps) {
       </div>
     );
   }
-
-  const isDark = useThemeMode() === "dark";
 
   const data: ChartDataPoint[] = hours.map((h) => ({
     time: formatHour(h.datetime),
