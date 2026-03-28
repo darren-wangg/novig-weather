@@ -2,7 +2,9 @@
 
 import { ComparisonBanner } from "@/components/ComparisonBanner";
 import { EventConfig } from "@/components/EventConfig";
+import { HourlyChart } from "@/components/HourlyChart";
 import { WeatherCard } from "@/components/WeatherCard";
+import { WeekCarousel } from "@/components/WeekCarousel";
 import { useForecast } from "@/hooks/useForecast";
 import { reverseGeocode, useGeolocation } from "@/hooks/useGeolocation";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
@@ -42,26 +44,33 @@ export default function Home() {
     if (!geo.coords) return;
     reverseGeocode(geo.coords.lat, geo.coords.lng).then((address) => {
       if (address) {
-        setConfig((prev) => ({ ...prev, location: address }));
-        setActiveParams({
-          location: address,
-          day: config.day,
-          window: config.timeRange,
+        setConfig((prev) => {
+          const updated = { ...prev, location: address };
+          setActiveParams({
+            location: address,
+            day: updated.day,
+            window: updated.timeRange,
+          });
+          return updated;
         });
       }
     });
-  }, [geo.coords]);
+  }, [geo.coords, setConfig]);
 
   const { data, isLoading, error } = useForecast(activeParams);
 
-  const handleSubmit = useCallback(() => {
-    if (!config.location.trim()) return;
-    setActiveParams({
-      location: config.location,
-      day: config.day,
-      window: config.timeRange,
-    });
-  }, [config]);
+  const handleSubmit = useCallback(
+    (overrideConfig?: EventConfigType) => {
+      const c = overrideConfig ?? config;
+      if (!c.location.trim()) return;
+      setActiveParams({
+        location: c.location,
+        day: c.day,
+        window: c.timeRange,
+      });
+    },
+    [config],
+  );
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -89,7 +98,7 @@ export default function Home() {
               <p className="text-sm text-red-700">{error.message}</p>
               <button
                 type="button"
-                onClick={handleSubmit}
+                onClick={() => handleSubmit()}
                 className="mt-2 text-sm font-medium text-red-700 underline hover:text-red-800"
               >
                 Try again
@@ -99,16 +108,56 @@ export default function Home() {
 
           {data && !isLoading && (
             <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <p className="text-sm text-gray-500">{data.resolvedAddress}</p>
-              </div>
+              <p className="text-sm text-gray-500">{data.resolvedAddress}</p>
 
               <ComparisonBanner thisWeek={data.thisWeek} nextWeek={data.nextWeek} />
 
-              <div className="grid gap-6 md:grid-cols-2">
-                {data.thisWeek && <WeatherCard label="This week" day={data.thisWeek} />}
-                {data.nextWeek && <WeatherCard label="Next week" day={data.nextWeek} />}
-              </div>
+              {/* Weather cards — carousel on mobile, side-by-side on desktop */}
+              {data.thisWeek && data.nextWeek ? (
+                <WeekCarousel labels={["This week", "Next week"]}>
+                  {[
+                    <div key="this" className="space-y-4">
+                      <WeatherCard label="This week" day={data.thisWeek} />
+                      <HourlyChart
+                        hours={data.thisWeek.hours}
+                        label="This week"
+                        color="#10b981"
+                      />
+                    </div>,
+                    <div key="next" className="space-y-4">
+                      <WeatherCard label="Next week" day={data.nextWeek} />
+                      <HourlyChart
+                        hours={data.nextWeek.hours}
+                        label="Next week"
+                        color="#6366f1"
+                      />
+                    </div>,
+                  ]}
+                </WeekCarousel>
+              ) : (
+                <div className="grid gap-6 md:grid-cols-2">
+                  {data.thisWeek && (
+                    <div className="space-y-4">
+                      <WeatherCard label="This week" day={data.thisWeek} />
+                      <HourlyChart
+                        hours={data.thisWeek.hours}
+                        label="This week"
+                        color="#10b981"
+                      />
+                    </div>
+                  )}
+                  {data.nextWeek && (
+                    <div className="space-y-4">
+                      <WeatherCard label="Next week" day={data.nextWeek} />
+                      <HourlyChart
+                        hours={data.nextWeek.hours}
+                        label="Next week"
+                        color="#6366f1"
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
 
