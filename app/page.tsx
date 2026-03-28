@@ -1,6 +1,8 @@
 "use client";
 
+import { ComparisonBanner } from "@/components/ComparisonBanner";
 import { EventConfig } from "@/components/EventConfig";
+import { WeatherCard } from "@/components/WeatherCard";
 import { useForecast } from "@/hooks/useForecast";
 import { reverseGeocode, useGeolocation } from "@/hooks/useGeolocation";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
@@ -23,7 +25,6 @@ export default function Home() {
   useEffect(() => {
     if (hasAutoDetected.current) return;
     if (config.location) {
-      // Saved location exists — use it immediately
       hasAutoDetected.current = true;
       setActiveParams({
         location: config.location,
@@ -64,8 +65,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="border-b bg-white px-4 py-3">
-        <h1 className="text-lg font-semibold">weatherd.io</h1>
+      <header className="border-b border-gray-200 bg-white/80 px-4 py-3 backdrop-blur-sm">
+        <h1 className="text-lg font-semibold tracking-tight text-gray-900">Tempora</h1>
       </header>
 
       <main className="mx-auto max-w-5xl p-4">
@@ -97,11 +98,16 @@ export default function Home() {
           )}
 
           {data && !isLoading && (
-            <div>
-              <p className="mb-4 text-sm text-gray-500">{data.resolvedAddress}</p>
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-gray-500">{data.resolvedAddress}</p>
+              </div>
+
+              <ComparisonBanner thisWeek={data.thisWeek} nextWeek={data.nextWeek} />
+
               <div className="grid gap-6 md:grid-cols-2">
-                {data.thisWeek && <WeekPreview label="This week" day={data.thisWeek} />}
-                {data.nextWeek && <WeekPreview label="Next week" day={data.nextWeek} />}
+                {data.thisWeek && <WeatherCard label="This week" day={data.thisWeek} />}
+                {data.nextWeek && <WeatherCard label="Next week" day={data.nextWeek} />}
               </div>
             </div>
           )}
@@ -113,36 +119,6 @@ export default function Home() {
           )}
         </section>
       </main>
-    </div>
-  );
-}
-
-/** Temporary minimal preview — will be replaced by WeatherCard in Step 3 */
-function WeekPreview({
-  label,
-  day,
-}: {
-  label: string;
-  day: {
-    datetime: string;
-    temp: number;
-    conditions: string;
-    humidity: number;
-    windspeed: number;
-    hours: unknown[];
-  };
-}) {
-  return (
-    <div className="rounded-xl border bg-white p-4 shadow-sm">
-      <h3 className="mb-1 text-sm font-semibold text-gray-500">{label}</h3>
-      <p className="text-lg font-bold">{day.datetime}</p>
-      <p className="text-2xl font-semibold">{Math.round(day.temp)}°F</p>
-      <p className="text-sm text-gray-600">{day.conditions}</p>
-      <div className="mt-2 flex gap-4 text-xs text-gray-500">
-        <span>Wind: {day.windspeed} mph</span>
-        <span>Humidity: {day.humidity}%</span>
-        <span>{day.hours.length} hourly points</span>
-      </div>
     </div>
   );
 }

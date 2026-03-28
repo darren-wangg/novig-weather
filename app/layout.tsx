@@ -3,7 +3,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 
 export const metadata: Metadata = {
-  title: "Weather Meetup",
+  title: "Tempora",
   description: "Compare weekly forecasts for your outdoor meetup",
 };
 
