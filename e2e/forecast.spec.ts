@@ -17,8 +17,8 @@ test("loads forecast for a location and displays weather cards", async ({ page }
   // Wait for forecast to load (weather card or resolved address appears)
   await expect(page.getByText(/Outdoor Score/i).first()).toBeVisible({ timeout: 15000 });
 
-  // Should show at least one weather card with a score
-  await expect(page.getByText(/\/100/).first()).toBeVisible();
+  // Should show at least one weather card with a score bar
+  await expect(page.getByRole("progressbar").first()).toBeVisible();
 
   // Should show day selector chips
   await expect(page.getByRole("button", { name: "Mon" })).toBeVisible();

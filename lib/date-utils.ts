@@ -34,7 +34,7 @@ export function getDateRange(day: string, today = new Date()): { startDate: stri
   };
 }
 
-export function formatDate(date: Date): string {
+function formatDate(date: Date): string {
   return date.toISOString().split("T")[0]!;
 }
 
