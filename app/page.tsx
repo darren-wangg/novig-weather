@@ -1,7 +1,11 @@
 "use client";
 
 import { ComparisonBanner } from "@/components/ComparisonBanner";
-import { EventConfig } from "@/components/EventConfig";
+import dynamic from "next/dynamic";
+
+const EventConfig = dynamic(() => import("@/components/EventConfig").then((m) => ({ default: m.EventConfig })), {
+  ssr: false,
+});
 import { ForecastSkeleton } from "@/components/ForecastSkeleton";
 import { HourlyChart } from "@/components/HourlyChart";
 import { ThemeToggle } from "@/components/ThemeToggle";
